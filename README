@@ -10,8 +10,25 @@ build) is NOT done in this directory.
 
 Instead, I make the tarball for each in this outer directory:
 
-    $ tar 
+    $ ./tar-it-up.sh <dir_with_slackbuild>
 
-/root/ because that's where I'd be doing that
-if I were actually using these through sbopkg or manually from
-the website.
+And then switch to superuser and copy the resulting .tar.gz to /root because
+that's where I'd be doing that normally anyway.
+
+    $ sudo -i
+    # cp /home/dave/slackbuilds/<package>.tar.gz .
+    # tar xf <package>.tar.gz
+    # cd <package>
+    # grep DOWNLOAD *.info
+    DOWNLOAD="https://example.com/<package>.tar.xz"
+    DOWNLOAD_x86_64=""
+    # wget https://example.com/<package>.tar.xz
+    # ./<package>.SlackBuild
+    ...
+    Slackware package /tmp/<package>-x86_64-1_SBo.tgz created.
+
+    # installpkg /tmp/<package>-x86_64-1_SBo.tgz
+
+LICENSES
+
+See individual <package>/<package.SlackBuild files.
