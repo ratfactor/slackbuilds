@@ -1,0 +1,17 @@
+Dave's Slackbuilds!
+
+There are only the slackbuild files as submitted to
+slackbuilds.org in this directory.
+
+(Though I may or may not submit everything I create here.)
+
+All testing (including downloading the application source being
+build) is NOT done in this directory. 
+
+Instead, I make the tarball for each in this outer directory:
+
+    $ tar 
+
+/root/ because that's where I'd be doing that
+if I were actually using these through sbopkg or manually from
+the website.
