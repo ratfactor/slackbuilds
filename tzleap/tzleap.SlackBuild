@@ -51,10 +51,11 @@ mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
 
-# we have just a single file, not a tarball
-cp leap-seconds.list $PKG
+# We have just a single file, not a tarball
+# Make directory location in package and copy file
+mkdir -p $PKG/usr/share/zoneinfo/
+cp $CWD/leap-seconds.list $PKG/usr/share/zoneinfo/
 
-cd $PRGNAM-$VERSION
 chown -R root:root $PKG
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
