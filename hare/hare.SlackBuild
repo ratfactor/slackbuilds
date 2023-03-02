@@ -77,8 +77,17 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$PRGNAM-$VERSION.tar.xz || tar xvf $CWD/$VERSION.tar.xz
-cd $PRGNAM-$VERSION
+
+if [ -e $CWD/$PRGNAM-$COMMITVERSION.tar.gz ]
+then
+    # browser download
+    tar xvf $CWD/$PRGNAM-$COMMITVERSION.tar.gz
+else
+    # wget download
+    tar xvf $CWD/$COMMITVERSION.tar.gz
+fi
+
+cd $PRGNAM-$COMMITVERSION
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -86,13 +95,27 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-# hare expects to find filename leap-seconds.list (other programs may as well):
-ln -s /usr/share/zoneinfo/leapseconds /usr/share/zoneinfo/leap-seconds.list
+# Copy example config and change prefix dir and mandirs.
+# Interestingly, this changes them to  what is shown at
+# https://harelang.org/distributions/
+#   /usr/local       -->  /usr
+#   /usr/share/man   -->  /usr/man
+cp config.example.mk config.mk
+sed -i 's|/usr/local|/usr|' config.mk
+sed -i 's|/share/man|/man|' config.mk
+
+# Making this build script idempotent to make it easier to test
+make clean
 
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 PREFIX=/usr \
 make
+
+# Shouldn't need this (install also performs it), but I had some
+# trouble (zero length hare.1) and this *seemed* to do the trick.
+make docs
+
 make install DESTDIR=$PKG PREFIX=/usr
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
@@ -105,6 +128,10 @@ cp -a \
   README.md \
   $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+
+# man pages need to be compressed
+gzip -9 $PKG/usr/man/man1/hare.1
+gzip -9 $PKG/usr/man/man1/haredoc.1
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
