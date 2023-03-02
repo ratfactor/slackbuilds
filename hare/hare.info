@@ -5,6 +5,6 @@ DOWNLOAD="https://git.sr.ht/~sircmpwn/hare/archive/1cbc3d0453055fa75b15797e937f4
 MD5SUM="e652fa188bec4a7e3db715e3b906fc40"
 DOWNLOAD_x86_64=""
 MD5SUM_x86_64=""
-REQUIRES="qbe harec scdoc"
+REQUIRES="qbe harec scdoc tzleap"
 MAINTAINER="Dave Gauer"
 EMAIL="dave@ratfactor.com"
